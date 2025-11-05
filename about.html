@@ -42,6 +42,28 @@ box-shadow:0 8px 20px rgba(255,111,0,0.1);transition:.3s;}
 .card h3{color:#ff6f00;margin-bottom:.5rem;}
 .card p{color:#555;}
 footer{text-align:center;padding:1.2rem;color:#777;border-top:1px solid #eee;}
+  /* Responsive Styles */
+@media (max-width: 1024px) {
+  header { padding: 1rem 2rem; }
+  .hero h1 { font-size: 2.8rem; }
+  .cards { gap: 1.5rem; }
+}
+
+@media (max-width: 768px) {
+  header { flex-direction: column; align-items: flex-start; padding: 1rem; }
+  nav a { margin: 0.3rem 0; padding: 0.4rem 0.8rem; }
+  .hero h1 { font-size: 2.2rem; }
+  .hero p { font-size: 1rem; }
+  .cards { flex-direction: column; align-items: center; gap: 1rem; }
+  .card { width: 90%; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.8rem; }
+  .hero p { font-size: 0.9rem; }
+  .btn { padding: 0.7rem 1.5rem; font-size: 0.9rem; }
+}
+
 </style>
 </head>
 <body>
@@ -81,4 +103,5 @@ document.querySelectorAll("a,.card").forEach(el=>{
 });
 </script>
 </body>
+
 </html>
