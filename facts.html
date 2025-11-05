@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriMate | Fun Facts</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+  <style>
+/* Base Styles */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;cursor:none;}
+body{background:#fff;color:#333;}
+a{text-decoration:none;color:inherit;}
+/* Custom Cursor */
+.cursor,.cursor-dot{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);}
+.cursor{width:30px;height:30px;border:2px solid rgba(255,111,0,0.6);transition:transform .2s,background .3s;}
+.cursor-dot{width:8px;height:8px;background:#ff6f00;}
+.hovered{transform:scale(1.6);background:rgba(255,111,0,0.1);}
+/* Navbar - MODIFIED */
+.navbar{
+  display:flex;justify-content:space-between;align-items:center;padding: 1.5rem 3rem; 
+  background:linear-gradient(90deg,#ff9800,#ff6f00);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+.logo{font-size: 2rem;font-weight: 700;}
+.nav-links{list-style:none;display:flex;}
+.nav-links li a{
+  margin:0 0.5rem;padding: 0.5rem 1rem; background: white; color: #ff6f00; 
+  border-radius: 20px; font-weight: 600;transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  position: relative;text-decoration: none;
+}
+.nav-links li a:hover{
+  background: #fff3e0; transform: translateY(-2px);box-shadow: 0 4px 10px rgba(255,111,0,0.3);
+}
+.nav-links li a.active{
+  background: white;box-shadow: 0 0 0 2px #ff6f00, 0 4px 10px rgba(0,0,0,0.1); 
+}
+/* Facts Specific */
+.container{max-width:1200px;margin:auto;padding:2rem;text-align:center;}
+h2{color:#ff6f00;margin-bottom:2rem;}
+#factsContainer{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.fact-card{background:#fff;border:1px solid #ffd699;border-radius:20px;padding:1.5rem;text-align:left;
+box-shadow:0 4px 10px rgba(255,111,0,0.1);transition:.3s; min-height: 180px;} 
+.fact-card:hover{transform:translateY(-5px);box-shadow:0 8px 15px rgba(255,140,0,0.2);}
+.fact-card h3{color:#ff6f00;margin-bottom:.5rem;font-size:1.2rem;}
+  </style>
+</head>
+<body>
+  <div class="cursor"></div><div class="cursor-dot"></div>
+  <nav class="navbar">
+    <div class="logo">🥗 NutriMate</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="facts.html" class="active">Facts</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <h2>Did You Know? 🤔</h2>
+    <div id="factsContainer" class="grid"></div>
+  </main>
+
+  <script>
+    // Custom cursor logic
+    const cursor=document.querySelector(".cursor"),dot=document.querySelector(".cursor-dot");
+    document.addEventListener("mousemove",e=>{
+      cursor.style.left=dot.style.left=e.clientX+"px";
+      cursor.style.top=dot.style.top=e.clientY+"px";
+    });
+    document.querySelectorAll("a,button,.fact-card").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursor.classList.add("hovered"));
+      el.addEventListener("mouseleave",()=>cursor.classList.remove("hovered"));
+    });
+
+    // Comprehensive list of facts
+    const allNutritionFacts = [
+      { title: "Metabolism Boost", text: "Eating breakfast regularly can increase your metabolic rate by up to 10%." },
+      { title: "Vitamin C Power", text: "Bell peppers contain more Vitamin C than an orange, especially the red and yellow varieties." },
+      { title: "Watermelon Hydration", text: "Watermelon is over 90% water, making it a fantastic snack for hydration." },
+      { title: "Gut Health", text: "Fiber is crucial for a healthy gut microbiome, which affects mood and immunity." },
+      { title: "Nutrient Density", text: "Kale is one of the most nutrient-dense foods on the planet, packed with vitamins A, K, and C." },
+      { title: "The Power of Sleep", text: "Lack of sleep can disrupt hormones that regulate appetite, leading to weight gain." },
+      { title: "Smallest Powerhouse", text: "Chia seeds absorb liquid up to 12 times their weight, keeping you feeling full longer." },
+      { title: "Protein Myth", text: "You don't need excessive protein to build muscle; consistency and proper timing are more important." },
+      { title: "Water and Weight", text: "Drinking water before meals can naturally reduce calorie intake." },
+      { title: "Calorie Density", text: "Nuts are very calorie-dense. A small handful is often enough for a healthy snack." },
+      { title: "Hidden Sugars", text: "Many 'low-fat' salad dressings contain surprisingly high amounts of sugar." },
+      { title: "Brain Food", text: "Omega-3 fatty acids found in fish and walnuts are essential for brain function and mood regulation." }
+    ];
+    
+    // Function to get 6 unique random facts
+    function getRandomFacts(arr, num) {
+        const shuffled = arr.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, num);
+    }
+
+    // Load 6 random facts on page load
+    const selectedFacts = getRandomFacts(allNutritionFacts, 6);
+    const container = document.getElementById('factsContainer');
+    selectedFacts.forEach(fact => {
+      const card = document.createElement('div');
+      card.className = 'fact-card';
+      card.innerHTML = `<h3>${fact.title}</h3><p>${fact.text}</p>`;
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>

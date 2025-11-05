@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriMate | AI Planner</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+  <style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;cursor:none;}
+  body {
+    background: linear-gradient(180deg, #fffaf3, #fff3e0);
+    color: #333; min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 1s ease;
+  }
+
+  /* === Custom Cursor === */
+  .cursor, .cursor-dot {
+    position: fixed; pointer-events: none; z-index: 9999;
+    border-radius: 50%; transform: translate(-50%, -50%);
+  }
+  .cursor {
+    width: 30px; height: 30px;
+    border: 2px solid rgba(255,111,0,0.6);
+    transition: transform .2s, background .3s;
+  }
+  .cursor-dot {
+    width: 8px; height: 8px;
+    background: #ff6f00;
+  }
+
+  /* Navbar */
+  .navbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3rem;
+    background: linear-gradient(90deg,#ff9800,#ff6f00);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .logo { font-size: 2rem; font-weight: 700; }
+  .nav-links { list-style: none; display: flex; }
+  .nav-links li a {
+    margin: 0 0.5rem; padding: 0.5rem 1rem;
+    background: white; color: #ff6f00;
+    border-radius: 20px; font-weight: 600; text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .nav-links li a:hover { background: #fff3e0; transform: translateY(-2px); }
+
+  /* Container */
+  .container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 8px 25px rgba(255,111,0,0.15);
+    padding: 2rem;
+    text-align: center;
+    animation: fadeIn 1.2s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header */
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 0 0 5px #ffb84d, 0 0 15px #ff9800;
+    animation: glow 2s infinite alternate;
+  }
+  @keyframes glow {
+    from { text-shadow: 0 0 5px #ffb84d; }
+    to { text-shadow: 0 0 15px #ff9800; }
+  }
+  p { color: #666; font-size: 1rem; }
+
+  /* Loader */
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff6f00;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 14px;
+    border-bottom: 1px solid #ffd699;
+    text-align: left;
+    transition: all 0.3s ease;
+  }
+  th {
+    color: white;
+    background: #ff6f00;
+  }
+  tr:hover { background: #fff7e0; transform: scale(1.01); }
+
+  /* Meal icons */
+  td:first-child::before {
+    margin-right: 8px;
+    display: inline-block;
+  }
+  tr:nth-child(1) td:first-child::before { content: "🥣"; }
+  tr:nth-child(2) td:first-child::before { content: "🍱"; }
+  tr:nth-child(3) td:first-child::before { content: "🍲"; }
+
+  /* Calorie box */
+  .calorie-box {
+    margin-top: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ff6f00;
+  }
+ 
+
+  .success { color: #43a047; font-weight: 600; margin-top: 1rem; }
+  .error { color: #e53935; margin-top: 1rem; font-weight: 600; }
+
+  /* Themes */
+  body.vegan-theme { background: linear-gradient(180deg, #e8f5e9, #c8e6c9); }
+  body.vegan-theme .navbar { background: linear-gradient(90deg,#66bb6a,#43a047); }
+  body.vegan-theme th { background: #43a047; }
+
+  body.nonveg-theme { background: linear-gradient(180deg, #ffebee, #ffcdd2); }
+  body.nonveg-theme .navbar { background: linear-gradient(90deg,#ef5350,#e53935); }
+  body.nonveg-theme th { background: #e53935; }
+
+  body.veg-theme { background: linear-gradient(180deg, #fff8e1, #ffecb3); }
+  body.veg-theme .navbar { background: linear-gradient(90deg,#ffa726,#fb8c00); }
+  body.veg-theme th { background: #fb8c00; }
+
+  @media(max-width:600px){.navbar{flex-direction:column;text-align:center;}.nav-links{flex-wrap:wrap;justify-content:center;}.container{padding:1.5rem;}h2{font-size:1.6rem;}}
+  </style>
+</head>
+
+<body>
+  <div class="cursor"></div>
+  <div class="cursor-dot"></div>
+
+  <nav class="navbar">
+    <div class="logo">🥗 NutriMate</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="profile.html">Profile</a></li>
+      <li><a href="facts.html">Facts</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h2>AI Nutrition Planner 🤖</h2>
+    <p id="status">Fetching your profile...</p>
+    <div class="loader" id="loader"></div>
+
+    <div id="planSection" style="display:none;">
+      <div class="success">✅ Personalized Plan Generated!</div>
+      <table id="planTable">
+        <thead>
+          <tr><th>Meal</th><th>Suggested Food</th></tr>
+        </thead>
+        <tbody id="planBody"></tbody>
+      </table>
+      <div class="calorie-box">
+        <div class="progress-ring"></div>
+        🔥 Recommended Daily Calories: <span id="calories"></span> kcal
+      </div>
+    </div>
+
+    <div id="errorMsg" class="error" style="display:none;">❌ Failed to generate plan. Check Flask connection.</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB2LQIH3Xtfk5BMVSTEL0wFRnRYgFvNLKY",
+      authDomain: "nutrimate-2fb76.firebaseapp.com",
+      projectId: "nutrimate-2fb76",
+      storageBucket: "nutrimate-2fb76.appspot.com",
+      messagingSenderId: "153462011734",
+      appId: "1:153462011734:web:1c069657a328d7b1b508f7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const statusEl = document.getElementById("status");
+    const loader = document.getElementById("loader");
+    const planSection = document.getElementById("planSection");
+    const errorMsg = document.getElementById("errorMsg");
+    const planBody = document.getElementById("planBody");
+    const caloriesEl = document.getElementById("calories");
+
+    async function generatePlan() {
+      try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) { statusEl.textContent = "⚠️ No user found."; loader.style.display = "none"; return; }
+
+        const docRef = doc(db, "profiles", userId);
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) { statusEl.textContent = "⚠️ No profile found."; loader.style.display = "none"; return; }
+
+        const data = snap.data();
+        statusEl.textContent = `Profile loaded! Name: ${data.name}`;
+        applyDietTheme(data.diet);
+
+        const payload = {
+          age: Number(data.age),
+          height: Number(data.height),
+          weight: Number(data.weight),
+          goal: data.goal === "Lose Weight" ? 0 : data.goal === "Maintain & Tone" ? 1 : 2,
+          diet: data.diet === "Vegetarian" ? 0 : data.diet === "Non-Vegetarian" ? 1 : 2
+        };
+
+       const response = await fetch("https://nutrimate-ml-1.onrender.com/predict", {
+    method: "POST", 
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+});
+        if (!response.ok) throw new Error("Flask connection failed");
+
+        const result = await response.json();
+        loader.style.display = "none";
+        planSection.style.display = "block";
+        planBody.innerHTML = `
+          <tr><td>Breakfast</td><td>${result.meals.breakfast}</td></tr>
+          <tr><td>Lunch</td><td>${result.meals.lunch}</td></tr>
+          <tr><td>Dinner</td><td>${result.meals.dinner}</td></tr>`;
+        caloriesEl.textContent = result.recommended_calories;
+      } catch (error) {
+        console.error("Error:", error);
+        loader.style.display = "none";
+        errorMsg.style.display = "block";
+      }
+    }
+
+    function applyDietTheme(dietType) {
+      document.body.classList.remove("vegan-theme", "veg-theme", "nonveg-theme");
+      if (!dietType) return;
+      const lower = dietType.toLowerCase();
+      if (lower.includes("vegan")) document.body.classList.add("vegan-theme");
+      else if (lower.includes("non")) document.body.classList.add("nonveg-theme");
+      else document.body.classList.add("veg-theme");
+    }
+
+    window.onload = generatePlan;
+const cursor=document.querySelector(".cursor"),dot=document.querySelector(".cursor-dot");
+document.addEventListener("mousemove",e=>{
+  cursor.style.left=dot.style.left=e.clientX+"px";
+  cursor.style.top=dot.style.top=e.clientY+"px";
+});
+document.querySelectorAll("a,button,.card").forEach(el=>{
+  el.addEventListener("mouseenter",()=>cursor.classList.add("hovered"));
+  el.addEventListener("mouseleave",()=>cursor.classList.remove("hovered"));
+});
+  </script>
+</body>
+</html>

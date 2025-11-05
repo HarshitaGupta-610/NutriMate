@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMate | Home</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>">
+<style>
+/* Base Styles */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;cursor:none;}
+body{background:#fff;overflow-x:hidden;color:#333;}
+a{text-decoration:none;color:inherit;}
+/* Custom Cursor */
+.cursor,.cursor-dot{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);}
+.cursor{width:30px;height:30px;border:2px solid rgba(255,111,0,0.6);transition:transform .2s,background .3s;}
+.cursor-dot{width:8px;height:8px;background:#ff6f00;}
+.hovered{transform:scale(1.6);background:rgba(255,111,0,0.1);}
+/* Navbar - MODIFIED */
+header{
+  display:flex;justify-content:space-between;align-items:center;padding: 1.5rem 3rem; 
+  background:linear-gradient(90deg,#ff9800,#ff6f00);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+.logo{font-size: 2rem;font-weight: 700;}
+nav a{
+  margin:0 0.5rem;padding: 0.5rem 1rem; background: white; color: #ff6f00; 
+  border-radius: 20px; font-weight: 600;transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  position: relative;text-decoration: none;
+}
+nav a::after{ content: none;}
+nav a:hover{
+  background: #fff3e0; transform: translateY(-2px);box-shadow: 0 4px 10px rgba(255,111,0,0.3);
+}
+nav a.active{
+  background: white;box-shadow: 0 0 0 2px #ff6f00, 0 4px 10px rgba(0,0,0,0.1); 
+}
+/* Utility */
+.container{max-width:1200px;margin:auto;padding:2rem;}
+.btn{padding:0.9rem 2rem;border:none;border-radius:50px;background:#ff6f00;color:#fff;font-weight:600;
+box-shadow:0 0 15px rgba(255,111,0,0.4);transition:.3s;cursor:pointer;}
+.btn:hover{transform:scale(1.05);background:#ff8f1a;box-shadow:0 0 25px rgba(255,140,0,0.6);}
+/* Hero Section */
+.hero{text-align:center;padding:6rem 2rem;background:#fff;}
+.hero h1{font-size:3.2rem;color:#ff6f00;margin-bottom:1rem;animation:fadeUp 1s;}
+.hero p{font-size:1.2rem;color:#555;max-width:600px;margin:0 auto 2rem;}
+.cards{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin-top:3rem;}
+.card{background:#fff;border:1px solid #ffd699;border-radius:20px;padding:2rem;width:250px;
+box-shadow:0 8px 20px rgba(255,111,0,0.1);transition:.3s, animation 0.5s ease-out;}
+.card:hover{transform:translateY(-10px) scale(1.03);box-shadow:0 10px 25px rgba(255,140,0,0.2);}
+.card h3{color:#ff6f00;margin-bottom:.5rem;}
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes featurePop{0%{transform:scale(0.9); opacity:0;} 100%{transform:scale(1); opacity:1;}}
+.card:nth-child(1){animation: featurePop 0.5s 0.2s forwards; opacity: 0;}
+.card:nth-child(2){animation: featurePop 0.5s 0.4s forwards; opacity: 0;}
+.card:nth-child(3){animation: featurePop 0.5s 0.6s forwards; opacity: 0;}
+/* Footer */
+footer{text-align:center;padding:1.5rem 0;color:#777;border-top:1px solid #eee;}
+</style>
+</head>
+<body>
+<div class="cursor"></div><div class="cursor-dot"></div>
+
+<header>
+  <div class="logo">🥗 NutriMate</div>
+  <nav>
+    <a href="index.html" class="active">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="facts.html">Facts</a>
+    <a href="about.html">About</a> 
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Your Pocket Nutrition Buddy</h1>
+  <p>Plan, track, and improve your daily health routine effortlessly — your AI-powered companion for smarter wellness.</p>
+  <a href="login.html"><button class="btn">Start Your Plan Now!</button></a> 
+
+  <div class="cards">
+    <div class="card"><h3>🍎 Personalized Diet</h3><p>Get daily nutrition plans tailored for your goals.</p></div>
+    <div class="card"><h3>💊 Medication Reminders</h3><p>Never miss your dose — stay on track easily.</p></div>
+    <div class="card"><h3>💪 Fitness Tracker</h3><p>Log your workouts and track calories burned.</p></div>
+  </div>
+</section>
+
+<footer>&copy; 2025 NutriMate | Smart Wellness for Everyone</footer>
+
+<script type="module">
+// =========================================================
+// START FIREBASE CORE BLOCK 
+// =========================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-functions.js"; 
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyB2LQIH3Xtfk5BMVSTEL0wFRnRYgFvNLKY",
+    authDomain: "nutrimate-2fb76.firebaseapp.com",
+    projectId: "nutrimate-2fb76",
+    storageBucket: "nutrimate-2fb76.firebasestorage.app",
+    messagingSenderId: "153462011734",
+    appId: "1:153462011734:web:1c069657a328d7b1b508f7",
+    measurementId: "G-32TNBW59PJ"
+};
+
+// Initialize Firebase instances
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const functions = getFunctions(app);
+// =========================================================
+// END FIREBASE CORE BLOCK
+// =========================================================
+
+const cursor=document.querySelector(".cursor"),dot=document.querySelector(".cursor-dot");
+document.addEventListener("mousemove",e=>{
+  cursor.style.left=dot.style.left=e.clientX+"px";
+  cursor.style.top=dot.style.top=e.clientY+"px";
+});
+document.querySelectorAll("a,button,.card").forEach(el=>{
+  el.addEventListener("mouseenter",()=>cursor.classList.add("hovered"));
+  el.addEventListener("mouseleave",()=>cursor.classList.remove("hovered"));
+});
+</script>
+</body>
+</html>
