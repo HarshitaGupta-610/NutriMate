@@ -146,6 +146,28 @@
   body.veg-theme th { background: #fb8c00; }
 
   @media(max-width:600px){.navbar{flex-direction:column;text-align:center;}.nav-links{flex-wrap:wrap;justify-content:center;}.container{padding:1.5rem;}h2{font-size:1.6rem;}}
+    /* Responsive Styles */
+@media (max-width: 1024px) {
+  header { padding: 1rem 2rem; }
+  .hero h1 { font-size: 2.8rem; }
+  .cards { gap: 1.5rem; }
+}
+
+@media (max-width: 768px) {
+  header { flex-direction: column; align-items: flex-start; padding: 1rem; }
+  nav a { margin: 0.3rem 0; padding: 0.4rem 0.8rem; }
+  .hero h1 { font-size: 2.2rem; }
+  .hero p { font-size: 1rem; }
+  .cards { flex-direction: column; align-items: center; gap: 1rem; }
+  .card { width: 90%; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.8rem; }
+  .hero p { font-size: 0.9rem; }
+  .btn { padding: 0.7rem 1.5rem; font-size: 0.9rem; }
+}
+
   </style>
 </head>
 
@@ -273,3 +295,4 @@ document.querySelectorAll("a,button,.card").forEach(el=>{
   </script>
 </body>
 </html>
+
