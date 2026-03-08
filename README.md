@@ -1,4 +1,4 @@
-🥗 NutriMate – Smart Diet Recommendation Web App
+#🥗NutriMate – Smart Diet Recommendation Web App
 A project developed under the Summer Internship at IGDTUW (2025).
 NutriMate is a lightweight, beginner-friendly diet recommendation system that blends a simple Machine Learning model with a clean HTML–CSS–JavaScript front end. The goal is to provide users with quick insights about suitable diet goals (Lose / Maintain / Gain) based on basic features like age, height, and weight.
 
